@@ -1,4 +1,3 @@
-import time
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.common.by import By
@@ -7,6 +6,7 @@ from selenium.webdriver.support.wait import WebDriverWait
 import sqlite3
 from sqlite3 import Connection, Error
 from hashlib import md5
+import os
 
 
 
@@ -28,6 +28,15 @@ cursor.execute("CREATE TABLE if not exists Marktplatz(checksum, text)")
 # driver setup
 options = webdriver.ChromeOptions()
 options.headless = True
+
+# change if os is docker
+SECRET_KEY = os.environ.get('AM_I_IN_A_DOCKER_CONTAINER', False)
+
+if SECRET_KEY:
+    print('I am running in a Docker container')
+    options.add_argument('--no-sandbox')
+    options.binary_location = "/usr/bin/chromium-browser"
+
 driver = webdriver.Chrome(options=options)
 
 
@@ -51,11 +60,10 @@ driver.implicitly_wait(0.5)
 
 # find count of pages
 pagesCount = len(driver.find_elements(By.XPATH, "//b"))
-print(pagesCount)
+
 
 # go over all pages
 for i in range(0,pagesCount+1):
-  print(i)
   driver.get("https://www.buchung.zhs-muenchen.de/cgi/sportpartnerboerse.cgi?action=search&offset=" +str(i)+ "&sportart=Wassersport&koennen=")
 
   # find all texts on one page

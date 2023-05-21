@@ -12,5 +12,5 @@ def telegram_bot_sendtext(bot_message):
     return response.json()
 
 
-test = telegram_bot_sendtext("https://www.buchung.zhs-muenchen.de/cgi/sportpartnerboerse.cgi?action=search&offset=0&sportart=Wassersport&koennen=")
+test = telegram_bot_sendtext("Sent from Docker")
 print(test)

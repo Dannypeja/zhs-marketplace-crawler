@@ -1,3 +1,4 @@
+import os
 import time
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
@@ -36,8 +37,15 @@ cursor = connection.cursor()
 # driver setup
 options = webdriver.ChromeOptions()
 options.headless = True
-driver = webdriver.Chrome(options=options)
+# change if os is docker
+SECRET_KEY = os.environ.get('AM_I_IN_A_DOCKER_CONTAINER', False)
 
+if SECRET_KEY:
+    options.add_argument('--no-sandbox')
+    options.binary_location = "/usr/bin/chromium-browser"
+
+
+driver = webdriver.Chrome(options=options)
 
 # checks if entry in table exists, based on hash
 # returns False if entry already existed and no entry was added
@@ -67,7 +75,8 @@ for description in descriptions:
   if add_new_entry(checksum, text): # adds new entry and returns True
       # sends email with text and link to click
       print("Triggered Telegram message.")
-      telegram_bot_sendtext("new entries on page: https://www.buchung.zhs-muenchen.de/cgi/sportpartnerboerse.cgi?action=search&offset=0&sportart=Wassersport&koennen=")
+
+      telegram_bot_sendtext("New entries on page: \n" + text + "\n https://www.buchung.zhs-muenchen.de/cgi/sportpartnerboerse.cgi?action=search&offset=0&sportart=Wassersport&koennen=")
 
 driver.close()
 
