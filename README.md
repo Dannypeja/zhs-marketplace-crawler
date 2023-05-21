@@ -14,6 +14,7 @@ pip install -r requirements.txt
 
 ```sh
 git clone <repo>
+cd <repoPath>
 docker build -t zhs-checker .
 ```
 
