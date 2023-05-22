@@ -1,5 +1,6 @@
 
 import requests
+from urllib import parse as urlparse
 
 def telegram_bot_sendtext(bot_message):
 
@@ -11,6 +12,8 @@ def telegram_bot_sendtext(bot_message):
 
     return response.json()
 
+text = "123"
+url = "https://www.buchung.zhs-muenchen.de/cgi/sportpartnerboerse.cgi?action=search&offset=0&sportart=Wassersport&koennen="
 
-test = telegram_bot_sendtext("Sent from Docker")
-print(test)
+url = urlparse.quote_plus(url)
+telegram_bot_sendtext("**New entries on page:**" + "\n" + text + "/n " + url)

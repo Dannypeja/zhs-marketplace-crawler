@@ -8,6 +8,7 @@ from selenium.webdriver.support.wait import WebDriverWait
 import sqlite3
 from sqlite3 import Connection, Error
 from hashlib import md5
+from urllib import parse as urlparse
 
 # telegram bot support
 import requests
@@ -75,8 +76,8 @@ for description in descriptions:
   if add_new_entry(checksum, text): # adds new entry and returns True
       # sends email with text and link to click
       print("Triggered Telegram message.")
-
-      telegram_bot_sendtext("New entries on page: \n" + text + "\n https://www.buchung.zhs-muenchen.de/cgi/sportpartnerboerse.cgi?action=search&offset=0&sportart=Wassersport&koennen=")
+      ascii_safe_url = url = urlparse.quote_plus("https://www.buchung.zhs-muenchen.de/cgi/sportpartnerboerse.cgi?action=search&offset=0&sportart=Wassersport&koennen=")
+      telegram_bot_sendtext("New entries on page: \n" + text + "\n" + ascii_safe_url)
 
 driver.close()
 

@@ -11,7 +11,7 @@ fi
 
 while true
 do
-	echo "\n looking for Database Update every 15 seconds: Press ctrl+C to exit or kill container \n"
+	echo "Looking for Database Update every 10 minutes: Press ctrl+C to exit or kill container"
   python $PWD/scripts/updater.py
-	sleep 15
+	sleep 600
 done
