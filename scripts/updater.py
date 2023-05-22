@@ -18,9 +18,7 @@ def telegram_bot_sendtext(bot_message):
     bot_token = '5903579103:AAG5t5PmaMULZtXjG84vyIm-MGsC9epxq94'
     bot_chatID = '11527907'
     send_text = 'https://api.telegram.org/bot' + bot_token + '/sendMessage?chat_id=' + bot_chatID + '&parse_mode=Markdown&text=' + bot_message
-
     response = requests.get(send_text)
-
     return response.json()
 
 # create DB and connection
@@ -76,8 +74,9 @@ for description in descriptions:
   if add_new_entry(checksum, text): # adds new entry and returns True
       # sends email with text and link to click
       print("Triggered Telegram message.")
+      ascii_safe_text = urlparse.quote_plus(text)
       ascii_safe_url = url = urlparse.quote_plus("https://www.buchung.zhs-muenchen.de/cgi/sportpartnerboerse.cgi?action=search&offset=0&sportart=Wassersport&koennen=")
-      telegram_bot_sendtext("New entries on page: \n" + text + "\n" + ascii_safe_url)
+      telegram_bot_sendtext("New entries on page: \n" + ascii_safe_text + "\n" + ascii_safe_url)
 
 driver.close()
 
