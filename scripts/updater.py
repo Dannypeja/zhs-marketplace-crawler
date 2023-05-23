@@ -32,9 +32,7 @@ search_strings = search_strings_from_env.split(";")
 # detects if substring exists
 def does_include_search_string(text: str, search_strings: list) -> bool:
     for search_string in search_strings:
-        print(search_string)
         if text.find(search_string) != -1:
-            print("substring found")
             return True
     return False
 
