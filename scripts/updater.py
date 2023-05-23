@@ -11,12 +11,6 @@ from hashlib import md5
 from urllib import parse as urlparse
 from datetime import datetime
 
-
-# Greet message:
-now = datetime.now()
-current_time = now.strftime("%H:%M:%S")
-print("running Update at: ", current_time)
-
 # telegram bot support
 import requests
 

@@ -11,7 +11,7 @@ fi
 
 while true
 do
-	echo "Looking for Database Update every 10 minutes: Press ctrl+C to exit or kill container"
+	echo "${date +"%T"}: Updating every 10m"
   python $PWD/scripts/updater.py
 	sleep 600
 done
