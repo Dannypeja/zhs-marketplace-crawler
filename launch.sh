@@ -11,7 +11,7 @@ fi
 
 while true
 do
-	echo "${date +"%T"}: Updating every 10m"
+	echo "$(date +"%T"): Updating every 10m"
   python $PWD/scripts/updater.py
 	sleep 600
 done

@@ -1,15 +1,9 @@
 import os
-import time
 from selenium import webdriver
-from selenium.webdriver.common.keys import Keys
-from selenium.webdriver.common.by import By
-from selenium.webdriver.support.ui import Select
-from selenium.webdriver.support.wait import WebDriverWait
 import sqlite3
 from sqlite3 import Connection, Error
 from hashlib import md5
 from urllib import parse as urlparse
-from datetime import datetime
 
 # telegram bot support
 import requests
@@ -33,7 +27,6 @@ def telegram_bot_sendtext(bot_message):
 # get search strings from env
 search_strings_from_env = os.environ.get("search_strings")
 search_strings = search_strings_from_env.split(";")
-print(search_strings)
 
 
 # detects if substring exists
