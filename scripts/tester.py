@@ -2,6 +2,7 @@ import sqlite3
 from sqlite3 import Connection, Error
 from hashlib import md5
 
+
 # create DB and connection
 def create_connection(path: str) -> Connection:
     connection = None
@@ -12,6 +13,7 @@ def create_connection(path: str) -> Connection:
         print(f"The error '{e}' occurred")
 
     return connection
+
 
 connection = create_connection("./marktplatz.db")
 cursor = connection.cursor()

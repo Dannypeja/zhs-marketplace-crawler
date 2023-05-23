@@ -12,7 +12,6 @@ from urllib import parse as urlparse
 from datetime import datetime
 
 
-
 # Greet message:
 now = datetime.now()
 current_time = now.strftime("%H:%M:%S")
@@ -20,13 +19,38 @@ print("running Update at: ", current_time)
 
 # telegram bot support
 import requests
-def telegram_bot_sendtext(bot_message):
 
-    bot_token = '5903579103:AAG5t5PmaMULZtXjG84vyIm-MGsC9epxq94'
-    bot_chatID = '11527907'
-    send_text = 'https://api.telegram.org/bot' + bot_token + '/sendMessage?chat_id=' + bot_chatID + '&parse_mode=Markdown&text=' + bot_message
+
+def telegram_bot_sendtext(bot_message):
+    bot_token = "5903579103:AAG5t5PmaMULZtXjG84vyIm-MGsC9epxq94"
+    bot_chatID = "11527907"
+    send_text = (
+        "https://api.telegram.org/bot"
+        + bot_token
+        + "/sendMessage?chat_id="
+        + bot_chatID
+        + "&parse_mode=Markdown&text="
+        + bot_message
+    )
     response = requests.get(send_text)
     return response.json()
+
+
+# get search strings from env
+search_strings_from_env = os.environ.get("search_strings")
+search_strings = search_strings_from_env.split(";")
+print(search_strings)
+
+
+# detects if substring exists
+def does_include_search_string(text: str, search_strings: list) -> bool:
+    for search_string in search_strings:
+        print(search_string)
+        if text.find(search_string) != -1:
+            print("substring found")
+            return True
+    return False
+
 
 # create DB and connection
 def create_connection(path: str) -> Connection:
@@ -37,6 +61,8 @@ def create_connection(path: str) -> Connection:
     except Error as e:
         print(f"The error '{e}' occurred")
     return connection
+
+
 connection = create_connection("./marktplatz.db")
 cursor = connection.cursor()
 
@@ -44,21 +70,28 @@ cursor = connection.cursor()
 options = webdriver.ChromeOptions()
 options.headless = True
 # change if os is docker
-SECRET_KEY = os.environ.get('AM_I_IN_A_DOCKER_CONTAINER', False)
+SECRET_KEY = os.environ.get("AM_I_IN_A_DOCKER_CONTAINER", False)
 
 if SECRET_KEY:
-    options.add_argument('--no-sandbox')
+    options.add_argument("--no-sandbox")
     options.binary_location = "/usr/bin/chromium-browser"
 
 
 driver = webdriver.Chrome(options=options)
 
+
 # checks if entry in table exists, based on hash
 # returns False if entry already existed and no entry was added
 def add_new_entry(checksum: hash, text: str) -> bool:
-    count = connection.execute("SELECT COUNT() FROM Marktplatz WHERE checksum = ?;", (checksum,)).fetchall()[0][0]
+    count = connection.execute(
+        "SELECT COUNT() FROM Marktplatz WHERE checksum = ?;", (checksum,)
+    ).fetchall()[0][0]
     if count == 0:
-        print("hash: " + checksum[:7] + " not in db: adding new one -> Telegram alert sent")
+        print(
+            "hash: "
+            + checksum[:7]
+            + " not in db: adding new one -> Telegram alert sent"
+        )
         connection.execute("INSERT INTO Marktplatz VALUES(?,?);", (checksum, text))
         connection.commit()
 
@@ -69,21 +102,41 @@ def add_new_entry(checksum: hash, text: str) -> bool:
 
 
 # check first page
-driver.get("https://www.buchung.zhs-muenchen.de/cgi/sportpartnerboerse.cgi?action=search&offset=0&sportart=Wassersport&koennen=")
+driver.get(
+    "https://www.buchung.zhs-muenchen.de/cgi/sportpartnerboerse.cgi?action=search&offset=0&sportart=Wassersport&koennen="
+)
 driver.implicitly_wait(0.5)
 
 # find all texts on one page
 descriptions = driver.find_elements_by_class_name("sp3")
 # add to database
 for description in descriptions:
-  text = description.text
-  checksum = md5(text.encode()).hexdigest()
+    text = description.text
+    checksum = md5(text.encode()).hexdigest()
 
-  if add_new_entry(checksum, text): # adds new entry and returns True
-      # sends email with text and link to click
-      ascii_safe_text = urlparse.quote_plus(text)
-      ascii_safe_url = url = urlparse.quote_plus("https://www.buchung.zhs-muenchen.de/cgi/sportpartnerboerse.cgi?action=search&offset=0&sportart=Wassersport&koennen=")
-      telegram_bot_sendtext("New entries on page: \n" + ascii_safe_text + "\n" + ascii_safe_url)
+    if add_new_entry(
+        checksum, text
+    ):  # adds new entry and returns True, select Highlight if Searchkey is right
+        # sends email with text and link to click
+        ascii_safe_text = urlparse.quote_plus(text)
+        ascii_safe_url = url = urlparse.quote_plus(
+            "https://www.buchung.zhs-muenchen.de/cgi/sportpartnerboerse.cgi?action=search&offset=0&sportart=Wassersport&koennen="
+        )
+
+        # add bold modifier
+        if does_include_search_string(text, search_strings):
+            bold_modifier = "*"
+        else:
+            bold_modifier = ""
+
+        telegram_bot_sendtext(
+            bold_modifier
+            + "New entries on page:"
+            + bold_modifier
+            + "\n "
+            + ascii_safe_text
+            + "\n"
+            + ascii_safe_url
+        )
 
 driver.close()
-
