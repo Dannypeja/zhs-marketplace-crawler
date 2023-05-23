@@ -9,10 +9,17 @@ import sqlite3
 from sqlite3 import Connection, Error
 from hashlib import md5
 from urllib import parse as urlparse
+from datetime import datetime
+
+
+
+# Greet message:
+now = datetime.now()
+current_time = now.strftime("%H:%M:%S")
+print("running Update at: ", current_time)
 
 # telegram bot support
 import requests
-
 def telegram_bot_sendtext(bot_message):
 
     bot_token = '5903579103:AAG5t5PmaMULZtXjG84vyIm-MGsC9epxq94'
@@ -51,9 +58,10 @@ driver = webdriver.Chrome(options=options)
 def add_new_entry(checksum: hash, text: str) -> bool:
     count = connection.execute("SELECT COUNT() FROM Marktplatz WHERE checksum = ?;", (checksum,)).fetchall()[0][0]
     if count == 0:
-        print("hash: " + checksum[:7] + " not in db: adding new one")
+        print("hash: " + checksum[:7] + " not in db: adding new one -> Telegram alert sent")
         connection.execute("INSERT INTO Marktplatz VALUES(?,?);", (checksum, text))
         connection.commit()
+
         return True
     else:
         print("hash: " + checksum[:7] + " already in DB")
@@ -73,7 +81,6 @@ for description in descriptions:
 
   if add_new_entry(checksum, text): # adds new entry and returns True
       # sends email with text and link to click
-      print("Triggered Telegram message.")
       ascii_safe_text = urlparse.quote_plus(text)
       ascii_safe_url = url = urlparse.quote_plus("https://www.buchung.zhs-muenchen.de/cgi/sportpartnerboerse.cgi?action=search&offset=0&sportart=Wassersport&koennen=")
       telegram_bot_sendtext("New entries on page: \n" + ascii_safe_text + "\n" + ascii_safe_url)
