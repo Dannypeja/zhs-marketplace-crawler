@@ -24,9 +24,8 @@ def telegram_bot_sendtext(bot_message):
     return response.json()
 
 
-# get search strings from env
-search_strings_from_env = os.environ.get("search_strings")
-search_strings = search_strings_from_env.split(";")
+# Default search Strings for testing
+search_strings = ["20.", "21."]
 
 
 # detects if substring exists
@@ -60,6 +59,9 @@ SECRET_KEY = os.environ.get("AM_I_IN_A_DOCKER_CONTAINER", False)
 if SECRET_KEY:
     options.add_argument("--no-sandbox")
     options.binary_location = "/usr/bin/chromium-browser"
+    # get search strings from Docker env
+    search_strings_from_env = os.environ.get("search_strings")
+    search_strings = search_strings_from_env.split(";")
 
 
 driver = webdriver.Chrome(options=options)
