@@ -1,0 +1,11 @@
+version: '3.1'
+
+services:
+  zhs-checker:
+    image: zhs-checker
+    restart: unless-stopped
+    container_name: zhs-checker
+    volumes:
+      - $PWD:/etc/zhs
+    environment:
+      - search_strings="09;17;22;01;07;14;22"
