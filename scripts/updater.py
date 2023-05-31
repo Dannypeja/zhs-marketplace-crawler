@@ -1,4 +1,5 @@
 import os
+import sys
 from selenium import webdriver
 import sqlite3
 from sqlite3 import Connection, Error
@@ -67,6 +68,7 @@ try:
     driver = webdriver.Chrome(options=options)
 except:
     telegram_bot_sendtext("Driver failure occured: Check Server Ressources!")
+    sys.exit()
 
 
 # checks if entry in table exists, based on hash
