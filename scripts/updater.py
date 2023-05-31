@@ -63,8 +63,10 @@ if SECRET_KEY:
     search_strings_from_env = os.environ.get("search_strings")
     search_strings = search_strings_from_env.split(";")
 
-
-driver = webdriver.Chrome(options=options)
+try:
+    driver = webdriver.Chrome(options=options)
+except:
+    telegram_bot_sendtext("Driver failure occured: Check Server Ressources!")
 
 
 # checks if entry in table exists, based on hash
@@ -88,11 +90,16 @@ def add_new_entry(checksum: hash, text: str) -> bool:
         return False
 
 
-# check first page
-driver.get(
-    "https://www.buchung.zhs-muenchen.de/cgi/sportpartnerboerse.cgi?action=search&offset=0&sportart=Wassersport&koennen="
-)
-driver.implicitly_wait(0.5)
+# error handling if page is not available
+try:
+    # check first page
+    driver.get(
+        "https://www.buchung.zhs-muenchen.de/cgi/sportpartnerboerse.cgi?action=search&offset=0&sportart=Wassersport&koennen="
+    )
+    driver.implicitly_wait(0.5)
+except:
+    telegram_bot_sendtext("Something is broken - Please check the Server!")
+    raise RuntimeError("driver could not get page")
 
 # find all texts on one page
 descriptions = driver.find_elements_by_class_name("sp3")
