@@ -135,3 +135,4 @@ for description in descriptions:
         )
 
 driver.close()
+driver.quit()

@@ -84,3 +84,4 @@ for i in range(0, pagesCount + 1):
         add_new_entry(checksum, text)
 
 driver.close()
+driver.quit()
