@@ -101,7 +101,6 @@ try:
     driver.implicitly_wait(0.5)
 except:
     telegram_bot_sendtext("Something is broken - Please check the Server!")
-    raise RuntimeError("driver could not get page")
 
 # find all texts on one page
 descriptions = driver.find_elements_by_class_name("sp3")
