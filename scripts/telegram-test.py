@@ -4,7 +4,8 @@ from urllib import parse as urlparse
 
 def telegram_bot_sendtext(bot_message):
     bot_token = "5903579103:AAG5t5PmaMULZtXjG84vyIm-MGsC9epxq94"
-    bot_chatID = "11527907"
+    bot_chatID = "-1001963609086"
+    #bot_chatID = "11527907"
     send_text = (
         "https://api.telegram.org/bot"
         + bot_token
