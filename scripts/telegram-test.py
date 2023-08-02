@@ -25,4 +25,4 @@ url = "https://www.buchung.zhs-muenchen.de/cgi/sportpartnerboerse.cgi?action=sea
 
 url = urlparse.quote_plus(url)
 
-telegram_bot_sendtext("*should be bold?*")
+telegram_bot_sendtext("*should be bold?* [Weiterleitung zur Kursplatzbörse](https://danilop.de/zhs-landing-page/)")

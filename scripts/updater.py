@@ -116,7 +116,7 @@ for description in descriptions:
         # sends email with text and link to click
         ascii_safe_text = urlparse.quote_plus(text)
         ascii_safe_url = url = urlparse.quote_plus(
-            "https://www.buchung.zhs-muenchen.de/cgi/sportpartnerboerse.cgi?action=search&offset=0&sportart=Wassersport&koennen="
+            "[Weiterleitung zur Kursplatzbörse](https://danilop.de/zhs-landing-page/)"
         )
 
         # add bold modifier

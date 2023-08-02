@@ -37,6 +37,10 @@ if SECRET_KEY:
     print("I am running in a Docker container")
     options.add_argument("--no-sandbox")
     options.binary_location = "/usr/bin/chromium-browser"
+else:
+    print("I am running locally")
+    options.add_argument("--no-sandbox")
+    options.binary_location = '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome'
 
 driver = webdriver.Chrome(options=options)
 
